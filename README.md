@@ -1,45 +1,40 @@
 # RenderSnap
 
-A Node.js web service that renders URLs as screenshots or PDFs, perfect for AI agents and automated services that need visual page captures.
+A fast, reliable web service that renders URLs as screenshots or PDFs. Perfect for AI agents, automated services, and developers who need programmatic visual page captures.
 
-## Features
-- Capture full-page screenshots in PNG format
-- Generate PDF exports of web pages
-- RESTful API for easy integration
-- Built with Express.js and Playwright
+## 🚀 Features
 
-## Quick Start
+- **Screenshot Capture**: Full-page screenshots in PNG format
+- **PDF Generation**: Export web pages as PDF documents  
+- **RESTful API**: Simple JSON API for easy integration
+- **Fast & Reliable**: Built with Express.js and Playwright
+- **Cloud Ready**: Deployed on Vercel with global edge network
 
-### Prerequisites
-- Node.js 18.x or higher
-- npm or yarn
+## 🌐 Service Endpoint
 
-### Installation
+**Production URL**: `https://render-snap-6xfbvzz1j-bradtacos-projects.vercel.app`
 
-1. Clone the repository:
+> **Note**: Currently requires authentication due to team security settings. For public access, run locally or contact for access.
+
+## 🚀 Quick Start
+
+### Test the API
+```bash
+curl -X POST https://render-snap-6xfbvzz1j-bradtacos-projects.vercel.app/render \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com", "type": "png"}'
+```
+
+### Run Locally
 ```bash
 git clone https://github.com/yourusername/rendersnap.git
 cd rendersnap
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Install Playwright browsers:
-```bash
 npx playwright install chromium
-```
-
-4. Start the server:
-```bash
 npm start
 ```
 
-The server will start on `http://localhost:3000`
-
-## API Documentation
+## 📚 API Documentation
 
 ### POST /render
 
@@ -61,45 +56,71 @@ Renders a URL as a screenshot or PDF.
 }
 ```
 
+**Error Response:**
+```json
+{
+  "error": "URL parameter is required."
+}
+```
+
+### GET /output/{filename}
+
+Serves the generated screenshot or PDF file.
+
 **Example:**
+```
+GET /output/render_1234567890.png
+```
+
+## 🔧 Technical Details
+
+- **Framework**: Express.js with Playwright
+- **Rendering Engine**: Chromium browser
+- **Supported Formats**: PNG screenshots, PDF exports
+- **Hosting**: Vercel with Node.js runtime
+- **Response Time**: Typically 2-5 seconds depending on page complexity
+
+## 📋 Rate Limits & Usage
+
+- No authentication required for local deployment
+- Cloud deployment currently has team-level access restrictions
+- Recommended for development and testing purposes
+- For production use, consider implementing rate limiting
+
+## 🤝 Support
+
+For issues, feature requests, or questions:
+- Open an issue on GitHub
+- Check the API documentation below
+- Test locally if cloud service is unavailable
+
+## 📝 Usage Examples
+
+### Basic Screenshot
 ```bash
 curl -X POST http://localhost:3000/render \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com", "type": "pdf"}'
+  -d '{"url": "https://github.com"}'
 ```
 
-## Deployment
-
-### Deploy to Vercel
-
-1. Install Vercel CLI:
+### PDF Export
 ```bash
-npm i -g vercel
+curl -X POST http://localhost:3000/render \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://github.com", "type": "pdf"}'
 ```
 
-2. Deploy:
-```bash
-vercel
+### JavaScript Integration
+```javascript
+const response = await fetch('http://localhost:3000/render', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ url: 'https://example.com', type: 'png' })
+});
+const result = await response.json();
+console.log(result.fileUrl); // "/output/render_1234567890.png"
 ```
 
-Follow the prompts to complete deployment. Your service will be available at a Vercel URL.
-
-### Environment Variables
-
-- `PORT` - Server port (default: 3000)
-
-## Project Structure
-
-```
-rendersnap/
-├── index.js          # Express server setup
-├── renderer.js       # Playwright rendering logic
-├── routes.js         # API endpoints
-├── output/           # Generated files directory
-├── package.json      # Dependencies and scripts
-└── vercel.json       # Vercel configuration
-```
-
-## License
+## 📄 License
 
 MIT
