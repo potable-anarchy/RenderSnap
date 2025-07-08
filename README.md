@@ -106,10 +106,22 @@ curl https://render-snap-6xfbvzz1j-bradtacos-projects.vercel.app/health
 
 ## 📋 Rate Limits & Usage
 
-- No authentication required for local deployment
-- Cloud deployment currently has team-level access restrictions
+### Free Tier Limits
+- **10 renders per hour** per IP address
+- **20 health checks per 5 minutes** per IP address  
+- **30 second timeout** per request
+- **1MB maximum** request payload size
+
+### Cost-Saving Features
+- Blocks local/private URLs (prevents SSRF)
+- Disables unnecessary resource loading (images, fonts, media)
+- 30-second timeouts prevent long-running requests
+- Optimized browser settings for minimal resource usage
+
+### Usage Guidelines
 - Recommended for development and testing purposes
-- For production use, consider implementing rate limiting
+- Rate limits help keep the service free for everyone
+- Use responsibly to avoid hitting limits
 
 ## 🤝 Support
 
