@@ -20,4 +20,25 @@ router.post('/render', async (req, res) => {
 
 router.use('/output', express.static(path.join(__dirname, 'output')));
 
+// Health check endpoint that renders a test page
+router.get('/health', async (req, res) => {
+  try {
+    const fileName = await renderPage('https://example.com', 'png');
+    res.json({ 
+      success: true, 
+      message: 'RenderSnap is healthy',
+      testUrl: 'https://example.com',
+      fileUrl: `/output/${fileName}`,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'RenderSnap health check failed',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 module.exports = router;

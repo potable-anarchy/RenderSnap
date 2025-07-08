@@ -76,6 +76,26 @@ Serves the generated screenshot or PDF file.
 GET /output/render_1234567890.png
 ```
 
+### GET /health
+
+Health check endpoint that renders a test page (example.com) to verify the service is working.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "RenderSnap is healthy",
+  "testUrl": "https://example.com",
+  "fileUrl": "/output/render_1234567890.png",
+  "timestamp": "2025-07-08T10:13:07.755Z"
+}
+```
+
+**Usage:**
+```bash
+curl https://render-snap-6xfbvzz1j-bradtacos-projects.vercel.app/health
+```
+
 ## 🔧 Technical Details
 
 - **Framework**: Express.js with Playwright
