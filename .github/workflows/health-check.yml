@@ -1,0 +1,76 @@
+name: Health Check
+
+on:
+  schedule:
+    # Run every hour at minute 0
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check RenderSnap Health
+      run: |
+        echo "🔍 Checking RenderSnap health..."
+        
+        # Make health check request
+        response=$(curl -s -w "%{http_code}" -o /tmp/health_response.json \
+          https://render-snap-bq6b9agaa-bradtacos-projects.vercel.app/health)
+        
+        echo "HTTP Status: $response"
+        
+        if [ "$response" = "200" ]; then
+          echo "✅ Health check passed!"
+          echo "Response:"
+          cat /tmp/health_response.json | jq '.'
+          
+          # Extract and verify response fields
+          success=$(cat /tmp/health_response.json | jq -r '.success')
+          message=$(cat /tmp/health_response.json | jq -r '.message')
+          test_url=$(cat /tmp/health_response.json | jq -r '.testUrl')
+          file_url=$(cat /tmp/health_response.json | jq -r '.fileUrl')
+          
+          echo "Success: $success"
+          echo "Message: $message"
+          echo "Test URL: $test_url"
+          echo "File URL: $file_url"
+          
+          if [ "$success" != "true" ]; then
+            echo "❌ Health check returned success=false"
+            exit 1
+          fi
+          
+        else
+          echo "❌ Health check failed with HTTP $response"
+          echo "Response body:"
+          cat /tmp/health_response.json
+          exit 1
+        fi
+    
+    - name: Verify Screenshot Access
+      run: |
+        echo "🖼️  Verifying screenshot file access..."
+        
+        # Extract file URL from health check response
+        file_url=$(cat /tmp/health_response.json | jq -r '.fileUrl')
+        full_url="https://render-snap-bq6b9agaa-bradtacos-projects.vercel.app${file_url}"
+        
+        echo "Testing file access: $full_url"
+        
+        # Check if screenshot file is accessible
+        file_response=$(curl -s -w "%{http_code}" -o /dev/null "$full_url")
+        
+        if [ "$file_response" = "200" ]; then
+          echo "✅ Screenshot file is accessible"
+        else
+          echo "❌ Screenshot file not accessible (HTTP $file_response)"
+          exit 1
+        fi
+    
+    - name: Health Check Summary
+      run: |
+        echo "🎉 RenderSnap health check completed successfully!"
+        echo "Service is operational and generating screenshots properly."
+        echo "Timestamp: $(date -u)"
