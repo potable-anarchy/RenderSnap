@@ -1,0 +1,20 @@
+{
+  "name": "rendersnap",
+  "version": "1.0.0",
+  "description": "A Node.js web service that renders URLs as screenshots or PDFs, perfect for AI agents and automated services that need visual page captures.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "playwright": "^1.53.2"
+  }
+}
